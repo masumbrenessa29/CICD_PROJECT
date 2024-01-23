@@ -1,1 +1,31 @@
+name: Continous Integration and Deployment
 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 7 ⚙
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Restore Dependency 🔨
+      run: dotnet restore
+
+    - name: Dotnet build 🚀
+      run: dotnet build -c Release --no-restore
+
+   - name: Run Automated Test 🧪
+      run: dotnet test -c Release --no-build
+            
+    - name: Publish App 📢
+      run: dotnet publish -c Release -o ./out
